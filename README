@@ -1,0 +1,33 @@
+This data set is constructed from BNC XML edition.
+The data file is in this format: 
+reference to BNC files \t LVC phrase \t +/-
+The format of the reference to BNC is: 
+BNC_file_dir/BNC_xml_fileName/sentence_number
+
+The annotation website is:
+http://l2r.cs.uiuc.edu/~ytu/test/LVCmain.html
+
+And the annotators are given the following instructions:
+
+#########################################
+Please identity if the bold-faced phrases are LVCs or not. The default value is Yes . Please change it to No if you disagree. If you think the phrase is an idiom within the given sentence, please mark it as Idiom. If you are not sure, please also check the Not sure button.
+An idiom is defined here as a multi-word phrase whose meaning cannot be inferred from any single word within it, for example, the phrase kick the bucket when used to mean "to die".
+
+Each instance starts with an ID, then the candidate verb phrase and finally a sentence in which the phrase is used. Please identify if the candidate verb phrase is a LVC within the given sentence. All sentences, phrases and their boundaries are extracted automatically from British National Corpus. If the phrasal boundary is clearly wrong, please mark it as No . For example, in the sentence "I do fear for you.", do fear is not a LVC since "do" here is an auxiliary verb instead of a main verb. Otherwise, if deleting the main verb and substituting it with the verb usage of its deverbal object won't change the meaning of the phrase much, please mark it as Yes. For example, "do working" in the sentence: "It was very satisfactory and the two girls went to Helen 's flat to celebrate with a drink and discuss the possibility of doing work for the pet shop in Seabourne .", changing "doing work" to "working" won't change the meaning of the sentence. It is then regarded as a LVC. If paraphrasing the sentence with the deverbal noun only requires very minor change, for example, deleting one preposition after it or changing "no" to "not", please also mark it as a LVC. One example for this is: Instead , as soon as they have found out something of what a word means , they may make use of it .. In this sentence, one way to paraphrase it only involves deleting make and the preposition of. Therefore, the phrase make use is still regarded as a LVC
+#########################################
+
+Each example is annotated by two annotators and 
+We only accept examples where both annotators agree on positive or negative.
+No manual checking has been done to corrent the annotation.
+
+If you use the data set, please cite:
+
+@InProceedings{TuRoth11,
+  author    = {Yuancheng Tu and Dan Roth},
+  title     = {Learning English Light Verb Constructions: Contextual or Statistica},
+  booktitle = {Proceedings of the ACL Workshop on Multiword Expressions: from Parsing and Generation to the Real World},
+  year      = {2011}
+}
+
+
+
