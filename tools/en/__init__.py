@@ -21,20 +21,20 @@ __license__   = "GPL"
 
 ######################################################################################################
 
-import article
-import commonsense
-import numeral
-import ordinal
-import parser
-import singular
-import plural
-import quantify
-import tags
-import verb as verb_lib
-import wordnet
-import rid
-import spelling
-import ogden
+# import article
+# import commonsense
+# import numeral
+# import ordinal
+# import parser
+# import singular
+# import plural
+# import quantify
+# import tags
+# import verb as verb_lib
+# import wordnet
+# import rid
+# import spelling
+# import ogden
 
 def is_number(value):
     return numeral.is_number(value)
@@ -189,7 +189,7 @@ class content:
         
     def categorise(self, str):
         return rid.categorise(str)
-
+"""
 number = number()
 list = list()
 noun = noun()
@@ -214,3 +214,4 @@ for p in def_prefixes:
         setattr(def_prefixes[p], f, eval("wordnet."+p+"_"+f))
         
 basic = ogden
+"""

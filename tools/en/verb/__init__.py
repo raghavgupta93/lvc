@@ -60,6 +60,70 @@ for infinitive in verb_tenses:
         if tense != "":
             verb_lemmas[tense] = infinitive
 
+
+
+
+
+
+
+
+
+
+
+def infinitive(self, word):
+    return verb_lib.verb_infinitive(word)
+    
+def conjugate(self, word, tense="infinitive", negate=False):
+    return verb_lib.verb_conjugate(word, tense, negate)
+
+def present(self, word, person="", negate=False):
+    return verb_lib.verb_present(word, person, negate)
+
+def present_participle(self, word):
+    return verb_lib.verb_present_participle(word)
+    
+def past(self, word, person="", negate=False):
+    return verb_lib.verb_past(word, person, negate)
+
+def past_participle(self, word):
+    return verb_lib.verb_past_participle(word)
+    
+def tenses(self):
+    return verb_lib.verb_all_tenses()
+    
+def tense(self, word):
+    return verb_lib.verb_tense(word)
+
+def is_tense(self, word, tense, negated=False):
+    return verb_lib.verb_is_tense(word, tense, negated)
+
+def is_present(self, word, person="", negated=False):
+    return verb_lib.verb_is_present(word, person, negated)
+
+def is_present_participle(self, word):
+    return verb_lib.verb_is_present_participle(word)
+
+def is_past(self, word, person="", negated=False):
+    return verb_lib.verb_is_past(word, person, negated)
+
+def is_past_participle(self, word):
+    return verb_lib.verb_is_past_participle(word)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def verb_infinitive(v):
     
     """ Returns the uninflected form of the verb.

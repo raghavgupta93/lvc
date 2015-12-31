@@ -3683,8 +3683,9 @@ autarchic_AJ%1#autarchical_AJ%1
 autarchy_N%1
 autarkic_AJ%1#autarkical_AJ%1
 autarky_N%1
+authority_N%71#authorize_V%63
 authentic_AJ%71#authenticate_V%95#authenticity_N%3#authentically_AV%71#authenticated_AJ%1#authentication_N%11
-author_N%7#author_V%5#authorise_V%13#authority_N%71#authorize_V%63#authorities_N%1#authorized_AJ%3#authoritarian_N%5#authorisation_N%1#authorization_N%43#authoritarian_AJ%71#authoritative_AJ%71#authoritarianism_N%3#authoritatively_AV%3
+author_N%7#author_V%5#authorise_V%13#authorize_V%63#authorities_N%1#authorized_AJ%3#authoritarian_N%5#authorisation_N%1#authorization_N%43#authoritarian_AJ%71#authoritative_AJ%71#authoritarianism_N%3#authoritatively_AV%3
 authoress_N%1
 authorial_AJ%1
 authorship_N%3
@@ -10261,7 +10262,7 @@ come!_V%16
 come-at-able_AJ%1
 come-on_N%1
 come_V%127#come_AJ%64#comer_N%35#coming_N%11#comely_AJ%7#coming_AJ%3
-comeback_N%7
+comeback_N%7#come back_V%7
 comedian_N%3
 comedienne_N%5
 comedo_N%1
@@ -10389,7 +10390,7 @@ compositor_N%5
 compost_N%7#compost_V%5
 compote_N%7
 compound_N%7#compound_V%23#compound_AJ%5#compounded_AJ%1#compounding_N%1
-comprehend_V%95#comprehended_AJ%1#comprehension_N%15#comprehensive_AJ%71#comprehendible_AJ%1#comprehensible_AJ%69#comprehensibly_AV%68#comprehensively_AV%3#comprehensibility_N%5#comprehensiveness_N%1
+comprehend_V%95#comprehended_AJ%1#comprehension_N%15#comprehensive_AJ%71#comprehendible_AJ%1#comprehensible_AJ%69#comprehensively_AV%3#comprehensibly_AV%68#comprehensibility_N%5#comprehensiveness_N%1
 compress_N%71#compress_V%127#compressor_N%35#compressed_AJ%1#compressing_N%1#compression_N%11#compressible_AJ%1#compressibility_N%3
 comprise_V%31#comprisal_N%8#comprising_N%1
 compromise_N%11#compromise_V%31#compromising_AJ%3
@@ -11317,8 +11318,7 @@ cove_N%7
 coven_N%5#covenant_N%39#covenant_V%33
 coventry_N%3
 cover-up_N%1
-cover_N%15#cover_V%31#covered_AJ%3#covering_N%15#covering_AJ%1
-coverage_N%3
+cover_N%15#cover_V%31#covered_AJ%3#covering_N%15#covering_AJ%1#coverage_N%3
 coverall_N%7
 coverlet_N%3
 covert_N%1#covert_AJ%7
@@ -20590,7 +20590,7 @@ handmade_AJ%7
 handmaid_N%1
 handmaiden_N%7
 handoff_N%1
-handout_N%5
+handout_N%5#hand out_V%1
 handover_N%1
 handrail_N%1
 handrest_N%1
@@ -22584,7 +22584,7 @@ ideal_N%7#ideal_AJ%7#idealise_V%9#idealist_N%35#idealize_V%43#idealism_N%3#ideal
 identicalness_N%1
 identify_V%95#identified_AJ%1#identifying_AJ%1#identifiable_AJ%3#identifiably_AV%1#identification_N%79
 identikit_N%1
-identity_N%7#identical_AJ%7#identically_AV%3
+identity_N%7#identical_AJ%7#identically_AV%3#identify_V%95
 ideogram_N%1
 ideograph_N%1#ideographic_AJ%1#ideographically_AV%1
 ideography_N%1
@@ -27220,7 +27220,7 @@ make-work_N%1
 make_N%11#make_V%63#maker_N%35#making_N%3
 makeready_N%1
 makeshift_N%3#makeshift_AJ%7
-makeup_N%7
+makeup_N%7#make up_V%1
 makeweight_N%1
 makin_N%1
 mako_N%1
@@ -32716,7 +32716,7 @@ own_V%55#own_AJ%3#owner_N%35#owned_AJ%1
 owner-driver_N%1
 owner-occupier_N%1#owner-occupied_AJ%1
 ownerless_AJ%1
-ownership_N%3
+ownership_N%3#own_V%3
 ox-eyed_AJ%1
 ox_N%7
 oxalacetate_N%1
@@ -33395,7 +33395,7 @@ pasqueflower_N%1
 pasquinade_N%1
 pass_N%15#pass_V%63#pass_AJ%1#passe_AJ%5#passer_N%33#passion_N%103#passing_N%3#passing_AJ%3#passeres_N%1#passing_AV%1#passionate_AJ%71#passionately_AV%3#passionateness_N%1
 passable_AJ%1#passably_AV%1
-passage_N%7#passages_V%16
+passage_N%7#pass_V%16
 passageway_N%7
 passamaquody_N%1
 passant_AJ%1
@@ -33558,7 +33558,7 @@ paymaster_N%7
 paynim_N%1
 payoff_N%7
 payola_N%1
-payroll_N%7
+payroll_N%7#payroll_V%7
 paysheet_N%1
 payslip_N%1
 pb_N%1#pbs_N%3
@@ -51426,7 +51426,7 @@ worship_N%15#worship_V%63#worshiper_N%35#worshipful_AJ%3#worshiping_AJ%1#worship
 worshipper_N%1
 worst_N%33#worst_V%33#worst_AJ%1#worst_AV%1#worsted_N%39
 wort_N%1
-worth_N%7#worth_AJ%3#worthful_AJ%1
+worth_N%7#worth_AJ%3#worthful_AJ%1#worth_V%7
 worthily_AV%1
 worthless_AJ%3#worthlessness_N%3
 worthlessly_AV%1

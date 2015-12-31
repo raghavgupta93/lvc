@@ -1,7 +1,7 @@
 tool_dir = 'tools'
 
 import spacy.en
-from spacy.en.attrs import IS_ALPHA, IS_UPPER, IS_PUNCT, LIKE_URL, LIKE_NUM
+#from spacy.en.attrs import IS_ALPHA, IS_UPPER, IS_PUNCT, LIKE_URL, LIKE_NUM
 import gzip
 import sys
 import xlsxwriter
@@ -11,33 +11,36 @@ sys.path.append(tool_dir + '/inflection-0.3.1')
 sys.path.append(tool_dir)
 import inflection
 import ner
-import en
+#from en import verb_lib
+import nodebox_verb
 from nltk.corpus import wordnet as wn
 from difflib import get_close_matches as gcm
-import urllib
-import urllib2
+#import urllib
+#import urllib2
 import json
 from variativity import *
 from utilities import *
 from possessive_self import *
 from other_features import *
+import importlib
 
 #setting default encoding to utf-8
-reload(sys)
-sys.setdefaultencoding('utf-8')
+importlib.reload(sys)
+#sys.setdefaultencoding('utf-8')
 
 def preprocess_verb_conjugator_lexicon(conjugated_verbs):
-	conjugated_verbs_file = open(tool_dir + '/en/verb/verb.txt', 'r')
+	conjugated_verbs_file = open('verb.txt', 'r')
 	for line in conjugated_verbs_file:
 		conjugated_verbs.add(line.split(',')[0])
 
+"""
 def word_exists_in_wiktionary(word):
 	url = 'https://en.wiktionary.org/w/api.php?action=query&titles=' + word + '&format=json'
 	if 'missing' in json.load(urllib.urlopen(url)):
 		return False
 	else:
 		return True
-
+"""
 #compare the frequencies of the given lemma as a verb versus as a noun in the BNC. Returns true if the noun occurrence is not more than 4 times as frequent as the verb occurrence
 def compare_lemma_verb_noun_frequencies(lemma, catvar_noun_dict, bnc_noun_frequencies, bnc_verb_frequencies):
 	noun_frequency = 0.
@@ -108,6 +111,9 @@ conjugated_verbs = set()
 
 #nlp pipeline (tagger and parser)
 nlp_pipeline = spacy.en.English()
+
+#HTTPS connection to Project Oxford WebLM service
+conn = http.client.HTTPSConnection('api.projectoxford.ai')
 
 #enlist the verbs we can conjugate. everything else, well, sorry
 preprocess_verb_conjugator_lexicon(conjugated_verbs)
@@ -185,10 +191,10 @@ with open(sys.argv[1], 'r') as fin_file:
 		if ' ||| ' not in line:
 			continue
 		components = line.split(' ||| ')
-		lvc_phrase_lemmatized = unicode(components[0].strip())
-		sentence = unicode(components[1].strip())
+		lvc_phrase_lemmatized = str(components[0].strip())
+		sentence = str(components[1].strip())
 		#print fin[super_index-1], fin[super_index-1].split(), unicode(fin[super_index-1].split()), unicode(fin[super_index-1].split())[-1]
-		true_label = unicode(fin[super_index-1].split()[-1])[-1]
+		true_label = str(fin[super_index-1].split()[-1])[-1]
 		length_of_lvc_phrase = len(lvc_phrase_lemmatized.split())
 
 		#parsing the sentence
@@ -202,13 +208,13 @@ with open(sys.argv[1], 'r') as fin_file:
 				is_start_of_lvc_phrase = True
 				for inner_index in range(1, length_of_lvc_phrase):
 					if not (lvc_phrase_lemmatized.split()[inner_index].lower() in [parsed_tokens[index + inner_index].lemma_.lower(), parsed_tokens[index + inner_index].orth_.lower()]):
-						sys.stderr.write(lvc_phrase_lemmatized.split()[inner_index].lower() + ' neither ' + parsed_tokens[index + inner_index].lemma_.lower() + ' or ' + parsed_tokens[index + inner_index].orth_.lower())
+						#sys.stderr.write(lvc_phrase_lemmatized.split()[inner_index].lower() + ' neither ' + parsed_tokens[index + inner_index].lemma_.lower() + ' or ' + parsed_tokens[index + inner_index].orth_.lower())
 						is_start_of_lvc_phrase = False
-						if not candidate_object_token_numbers:
-							sys.stderr.write(sentence + '\nBehenchod\n')
-						break
+						#if not candidate_object_token_numbers:
+						#	#sys.stderr.write(sentence + '\nBehenchod\n')
+						#break
 				if is_start_of_lvc_phrase:
-					candidate_object_token_numbers.append(index + length_of_lvc_phrase - 1)
+					candidate_object_token_numbers.append((index, index + length_of_lvc_phrase - 1))
 			"""#if there's a direct object, to start with 
 			if (parsed_tokens[index].dep_.strip() == "dobj"):
 				#if the verb belongs to the list of allowed verbs
@@ -226,19 +232,22 @@ with open(sys.argv[1], 'r') as fin_file:
 									if compare_lemma_verb_noun_frequencies(parsed_tokens[index].lemma_.lower(), catvar_noun_dict, bnc_noun_frequencies, bnc_verb_frequencies):
 										#add this token to the list of possible light verb objects for this sentence: there may be multiple
 										candidate_object_token_numbers.append(index)"""
-		
+		if not candidate_object_token_numbers:
+			sys.stderr.write('LVC phrase not found for sentence\n' + sentence + '\n')
+
+
 		#now consider each candidate, construct verb phrase, noun phrase, lvc phrase
-		for object_index in candidate_object_token_numbers:
+		for index_tuple in candidate_object_token_numbers:
 			#some initializations
-			object_token = parsed_tokens[object_index]
+			object_token = parsed_tokens[index_tuple[1]]
+			object_index = index_tuple[1]
 			object_headword = object_token.orth_
 			
-			verb_token = object_token.head
-			verb_index = get_index_in_list(parsed_tokens, verb_token)
+			verb_token = parsed_tokens[index_tuple[0]]
+			verb_index = index_tuple[0]
 			verb_headword = verb_token.orth_
 			if verb_token.lemma_.lower() != lvc_phrase_lemmatized.split()[0].lower():
-				sys.stderr.write(sentence + '\n\n')
-				continue
+				sys.stderr.write(sentence + 'Error checkpoint 12\n\n')
 			
 			"""list_of_subjects = [subject_token for subject_token in parsed_tokens if subject_token.dep_ == "nsubj" and subject_token.head is verb_token]
 			if len(list_of_subjects) != 1:
@@ -265,7 +274,7 @@ with open(sys.argv[1], 'r') as fin_file:
 				#adding only compound noun modifiers to the noun phrase, discarding 'amod'
 				else:
 					lvc_phrase += u' ' + parsed_tokens[index].orth_
-					if parsed_tokens[index].dep_.strip() == u'prt' and get_index_in_list(parsed_tokens, parsed_tokens[index].head) == verb_index:
+					if parsed_tokens[index].dep_.strip() == u'prt' and get_index_in_list(parsed_tokens, parsed_tokens[index].head) == verb_index and index == verb_index + 1:
 						verb_phrase += u' ' + parsed_tokens[index].orth_
 					if parsed_tokens[index].dep_.strip() == u'compound' and get_index_in_list(parsed_tokens, parsed_tokens[index].head) == object_index:
 						noun_phrase += parsed_tokens[index].orth_ + u' '
@@ -276,22 +285,22 @@ with open(sys.argv[1], 'r') as fin_file:
 			#but first, some filters!
 			
 			#if there's a comma or parentheses in the LVC phrase, skip
-			if u',' in lvc_phrase or u'(' in lvc_phrase or u')' in lvc_phrase:
-				sys.stderr.write(sentence + '\nStep4\n')
-				continue
+			#if u',' in lvc_phrase or u'(' in lvc_phrase or u')' in lvc_phrase:
+			#	sys.stderr.write(sentence + '\nStep4\n')
+			#	continue
 			#if the verb is preceded or the noun is followed by a hyphen, skip
 			phrase_index = sentence.find(lvc_phrase)
-			if phrase_index >= 2 and sentence[phrase_index - 2] == u'-':
-				sys.stderr.write(sentence + '\nStep5\n')
-				continue
-			if phrase_index + 2 < len(sentence) and sentence[phrase_index + 2] == u'-':
-				sys.stderr.write(sentence + '\nStep6\n')
-				continue
+			#if phrase_index >= 2 and sentence[phrase_index - 2] == u'-':
+			#	sys.stderr.write(sentence + '\nStep5\n')
+			#	continue
+			#if phrase_index + 2 < len(sentence) and sentence[phrase_index + 2] == u'-':
+			#	sys.stderr.write(sentence + '\nStep6\n')
+			#	continue
 			#if lvc_phrase not in tokenized sentence, leave it
 			if lvc_phrase not in sentence:
 				sys.stderr.write(sentence + '\nStep7\n')
 				continue			
-			
+
 			#now print feature values
 			string_sentences = ''
 			
@@ -305,7 +314,7 @@ with open(sys.argv[1], 'r') as fin_file:
 				sys.stderr.write(sentence + '\nStep1\n')
 				continue
 			elif possessive_referencing_subject_already_present(parsed_tokens, verb_token, object_token, verb_index, object_index, subject_properties[2]):
-				a = 0
+				sys.stderr.write(sentence + '\nSelf possessive already present\n\n\n')
 				#string_sentences += 'POSSESSIVE REFERENCING THE SUBJECT\nAnswer - YES\n\n'
 			else:
 				possessive_self_counter += 1
@@ -316,6 +325,7 @@ with open(sys.argv[1], 'r') as fin_file:
 				else:
 					replacement_phrase = subject_properties[3] + ' ' + subject_properties[2] + ' ' + noun_phrase
 				list_of_arguments = [sentence.split(lvc_phrase)[0].strip(), lvc_phrase, replacement_phrase, sentence.split(lvc_phrase)[1].strip()]
+				sys.stderr.write('Replaced phrase being\n' + replacement_phrase + '\n\n\n')
 				for column_index in range(len(list_of_arguments)):
 					stuff_to_write_to_workbooks.append([worksheet_possessive_self, possessive_self_counter, column_index, if_blank_return_space(list_of_arguments[column_index])])
 				
@@ -325,16 +335,16 @@ with open(sys.argv[1], 'r') as fin_file:
 			
 			#variativity
 			if not noun_to_verb_in_catvar(catvar_file, object_token.lemma_.lower(), catvar_noun_dict, catvar_no_verb_set):
-				sys.stderr.write(sentence + '\nStep2\n')
+				sys.stderr.write(sentence + '\nNo verb in catvar\n')
 				sys.stderr.write(object_token.lemma_.lower() + '\n')
 				continue
 			list_of_related_verbs = catvar_noun_dict[object_token.lemma_.lower()]
 			verb = list_of_related_verbs[0]
-			if verb not in conjugated_verbs or verb != en.verb.present(verb) or not subject_properties:
-				sys.stderr.write(sentence + '\nStep3\n')
+			if verb not in conjugated_verbs:# or not subject_properties or verb != nodebox_verb.present(verb)
+				sys.stderr.write(sentence + '\nNo conjugation present for verb\n')
 				sys.stderr.write(verb + '\n')
 				continue
-			"""variativity_replacement_strings = variativity_replacement(sentence, verb_token, object_token, object_index, verb_index, parsed_tokens, verb, lvc_phrase, catvar_file, adjective_adverb_dict, no_adverb_set, object_preposition_dict, no_preposition_objects, subject_properties[0], subject_properties[1])
+			variativity_replacement_strings = variativity_replacement(sentence, verb_token, object_token, object_index, verb_index, parsed_tokens, verb, lvc_phrase, catvar_file, adjective_adverb_dict, no_adverb_set, object_preposition_dict, no_preposition_objects, subject_properties[0], subject_properties[1], conn)
 			if variativity_replacement_strings:
 				new_sentence = variativity_replacement_strings[0]
 				phrase_to_replace = variativity_replacement_strings[1]
@@ -345,11 +355,11 @@ with open(sys.argv[1], 'r') as fin_file:
 				list_of_arguments = [sentence.split(phrase_to_replace)[0].strip(), phrase_to_replace, sentence.split(phrase_to_replace)[1].strip(), new_sentence.split(phrase_to_replace)[0].strip(), final_phrase_active, final_phrase_passive, new_sentence.split(phrase_to_replace)[1].strip(), true_label]
 				for column_index in range(len(list_of_arguments)):
 					stuff_to_write_to_workbooks.append([worksheet_variativity, variativity_counter, column_index, if_blank_return_space(list_of_arguments[column_index])])
-					#worksheet_variativity.write(variativity_counter, column_index, if_blank_return_space(list_of_arguments[column_index]))	
+					worksheet_variativity.write(variativity_counter, column_index, if_blank_return_space(list_of_arguments[column_index]))	
 				string_sentences += ' ||| '.join(list_of_arguments)
 			else:
-				sys.stderr.write(sentence + '\n\n')
-				continue"""
+				sys.stderr.write('Did not find verbal replacement for sentence\n' + sentence + '\nand LVC phrase\n' + lvc_phrase + '\n\n')
+				continue
 			
 			#synonym verb
 			#string_sentences += 'SYNONYM VERB\nDoes this sentence make sense?\n' +  generate_synonym_verb_sentence(parsed_tokens, verb_token, verb_index, object_index) + '\n\n'
